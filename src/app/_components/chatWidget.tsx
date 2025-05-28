@@ -108,34 +108,38 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
 
   return (
     <div className="fixed right-4 bottom-4 z-50">
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="rounded-full bg-blue-500 p-4 text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-blue-600"
-        >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-            />
-          </svg>
-        </button>
-      )}
+     {!isOpen && (
+  <button
+    onClick={() => setIsOpen(true)}
+    className="rounded-full bg-green-500 p-4 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-blue-600 group"
+  >
+    <div className="flex items-center">
+      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" className="animate-pulse drop-shadow-glow" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#ff00cc" />
+            <stop offset="100%" stopColor="#3300ff" />
+          </linearGradient>
+        </defs>
+          <path d="M8 12C8 8.68629 10.6863 6 14 6H50C53.3137 6 56 8.68629 56 12V42C56 45.3137 53.3137 48 50 48H24L14 58V48H14C10.6863 48 8 45.3137 8 42V12Z" stroke="url(#grad)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 30a8 8 0 0116 0Z" fill="#3300ff"/>
+          <circle cx="29" cy="26" r="2" fill="white"/>
+          <circle cx="35" cy="26" r="2" fill="white"/>
+          <line x1="32" y1="18" x2="32" y2="14" stroke="#3300ff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span className="text-sm font-medium">Chatea con EBAC IA</span>
+    </div>
+  </button>
+)}
 
       {isOpen && (
-        <div className="flex h-96 w-80 flex-col rounded-lg bg-white shadow-xl">
-          <div className="flex items-center justify-between rounded-t-lg bg-blue-500 p-4 text-white">
-            <h3 className="font-semibold">Chat de Soporte</h3>
+        <div className="flex h-96 w-80 flex-col rounded-2x1 bg-white shadow-xl transition-all duration-300 animate-fade-in">
+          <div className="flex items-center justify-between rounded-t-lg bg-gradient-to-r from-[#ff00cc] to-[#3300ff] p-4 text-white">
+            <h3 className="font-semibold">EBAC IA te responderá</h3>
             <button
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-gray-200"
+              aria-label="Cerrar chat"
             >
               ✕
             </button>
@@ -145,7 +149,7 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
             <div className="flex flex-1 flex-col justify-center p-4">
               <h4 className="mb-4 text-lg font-medium">¡Hola! 👋</h4>
               <p className="mb-4 text-gray-600">
-                Para comenzar, necesitamos tus datos:
+                Para comenzar, me gustaría saber a quien voy a atender:
               </p>
               <form onSubmit={handleEmailSubmit}>
                 <input
@@ -167,7 +171,7 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                  className="w-full rounded bg-gradient-to-r from-[#ff00cc] to-[#3300ff] p-2 text-white hover:bg-blue-600 disabled:opacity-50"
                 >
                   {isLoading ? "Iniciando..." : "Comenzar Chat"}
                 </button>
@@ -184,11 +188,7 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
                     className={`mb-2 ${message.senderType == "USER" ? "text-right" : "text-left"}`}
                   >
                     <div
-                      className={`inline-block max-w-[70%] rounded-lg p-2 break-words ${
-                        message.senderType == "USER"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
+                      className={getBubbleClass(message.senderType == "USER")}
                     >
                       <div className="whitespace-pre-wrap">
                         {message.content}
@@ -199,8 +199,8 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
                 <div ref={messagesEndRef} />
               </div>
 
-              <form onSubmit={handleSendChatMessage} className="border-t p-4">
-                <div className="flex space-x-2">
+              <form onSubmit={handleSendChatMessage} className="border-t p-2">
+                <div className="flex items-end gap-2">
                   <textarea
                     ref={(textArea) => {
                       if (textArea && !newChatMessage) {
@@ -222,17 +222,43 @@ export default function ChatWidget({ token, domain }: ChatWidgetProps) {
                       }
                     }}
                     placeholder="Escribe tu mensaje..."
-                    className="flex-1 rounded border border-gray-300 p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="flex-1 resize-none rounded border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     disabled={isLoading}
                     rows={2}
                   />
+                  {!isLoading ? 
                   <button
                     type="submit"
                     disabled={isLoading || !newChatMessage.trim()}
-                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                    className="rounded bg-gradient-to-b from-[#ff00cc] to-[#3300ff] px-3 py-1 text-sm text-white hover:opacity-80 disabled:opacity-50"
                   >
-                    {isLoading ? "..." : "Enviar"}
+                    Enviar
                   </button>
+                  : 
+                  <svg className="h-5 w-5 animate-spin text-gradient" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <linearGradient id="spinner-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#ff00cc" />
+      <stop offset="100%" stopColor="#3300ff" />
+    </linearGradient>
+  </defs>
+  <circle
+    className="opacity-25"
+    cx="12"
+    cy="12"
+    r="10"
+    stroke="url(#spinner-gradient)"
+    strokeWidth="4"
+    fill="none"
+  />
+  <path
+    className="opacity-75"
+    fill="url(#spinner-gradient)"
+    d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+  />
+</svg>
+
+                  }
                 </div>
               </form>
             </>

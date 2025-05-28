@@ -68,7 +68,8 @@ export default function DemoPage() {
         dangerouslySetInnerHTML={{
           __html: `
           window.ChatWidget.init({
-            token: 'M94Q9fViTUT0NK9X3RdXChQ_q-35G4BB'
+            token: '5SlcLieNjvoJkk-1co6_ST9bryxU0WDV',
+            domain: 'http://localhost:3000'
           });
         `,
         }}
