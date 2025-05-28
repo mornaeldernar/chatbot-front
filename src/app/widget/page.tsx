@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import ChatWidget from "../_components/chatWidget";
+import ChatWidget from "../_components/ChatWidget/chatWidget";
 
 export default function WidgetPage() {
   const searchParams = useSearchParams();
